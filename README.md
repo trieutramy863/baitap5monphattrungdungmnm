@@ -183,3 +183,8 @@ Vào:
 
 EXPORT TOÀN BỘ IMAGE
 
+<img width="346" height="62" alt="image" src="https://github.com/user-attachments/assets/5a3ee569-b5f0-4462-ad64-1197aa56f09b" />
+
+DỪNG HỆ THỐNG Trong thư mục project: cd ~/bt5-monitor docker compose down Kiểm tra: docker ps
+
+
