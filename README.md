@@ -38,6 +38,325 @@ bt5:
      load lại các container  từ file nén để khôi phục các container đã xoá
 
 # A.Lý thuyết
+Docker là gì?
+
+Docker là một nền tảng mã nguồn mở giúp đóng gói, triển khai và chạy ứng dụng trong các môi trường độc lập gọi là Container. Container chứa toàn bộ những gì ứng dụng cần để hoạt động như mã nguồn, thư viện, cấu hình và các thành phần phụ thuộc.
+
+Nhờ Docker, ứng dụng có thể chạy giống nhau trên nhiều môi trường khác nhau như máy tính cá nhân, máy chủ vật lý hoặc môi trường đám mây mà không gặp vấn đề khác biệt về cấu hình.
+
+Các thành phần chính của Docker
+Docker Image: Mẫu được sử dụng để tạo Container.
+Docker Container: Phiên bản đang chạy của Image.
+Dockerfile: Tệp mô tả cách xây dựng Docker Image.
+Docker Compose: Công cụ quản lý và chạy nhiều Container cùng lúc.
+Docker Registry: Kho lưu trữ Docker Image như Docker Hub.
+
+Ví dụ chạy một Container Nginx:
+
+docker run nginx
+Các keyword thường dùng trong docker-compose.yml
+
+Ví dụ cấu trúc tổng quát:
+
+version: "3.9"
+
+services:
+  web:
+    image: nginx
+    ports:
+      - "80:80"
+
+networks:
+  app_network:
+
+volumes:
+  app_data:
+1. version
+
+Xác định phiên bản cú pháp Docker Compose.
+
+version: "3.9"
+2. services
+
+Khai báo các dịch vụ (containers) cần chạy.
+
+services:
+  web:
+3. image
+
+Chỉ định Image được sử dụng để tạo Container.
+
+image: nginx:latest
+4. build
+
+Xây dựng Image từ Dockerfile.
+
+build: .
+
+Hoặc:
+
+build:
+  context: .
+  dockerfile: Dockerfile
+5. container_name
+
+Đặt tên cho Container.
+
+container_name: myapp
+6. ports
+
+Ánh xạ cổng giữa Host và Container.
+
+ports:
+  - "8080:80"
+
+Ý nghĩa:
+
+Cổng 8080 trên máy chủ.
+Chuyển tiếp tới cổng 80 trong Container.
+7. environment
+
+Khai báo biến môi trường.
+
+environment:
+  DB_HOST: mysql
+  DB_PORT: 3306
+8. volumes
+
+Gắn thư mục hoặc Docker Volume.
+
+volumes:
+  - mysql_data:/var/lib/mysql
+
+Hoặc:
+
+volumes:
+  - ./src:/app
+9. networks
+
+Khai báo mạng cho các Container giao tiếp với nhau.
+
+networks:
+  - app_network
+
+Khai báo mạng:
+
+networks:
+  app_network:
+10. depends_on
+
+Khai báo sự phụ thuộc giữa các Service.
+
+depends_on:
+  - mysql
+
+Docker sẽ khởi động MySQL trước Application.
+
+11. restart
+
+Chính sách tự động khởi động lại.
+
+restart: always
+
+Các giá trị thường dùng:
+
+restart: no
+restart: on-failure
+restart: unless-stopped
+restart: always
+12. command
+
+Ghi đè lệnh mặc định của Container.
+
+command: npm start
+13. hostname
+
+Đặt hostname cho Container.
+
+hostname: webserver
+14. working_dir
+
+Thư mục làm việc bên trong Container.
+
+working_dir: /app
+15. entrypoint
+
+Lệnh được thực thi đầu tiên khi Container khởi động.
+
+entrypoint:
+  - python
+  - app.py
+16. healthcheck
+
+Kiểm tra trạng thái hoạt động của Container.
+
+healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost"]
+  interval: 30s
+  timeout: 10s
+  retries: 3
+Ví dụ Docker Compose hoàn chỉnh
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: myapp
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+
+    depends_on:
+      - mysql
+
+    networks:
+      - app_network
+
+  mysql:
+    image: mysql:8
+
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+    networks:
+      - app_network
+
+volumes:
+  mysql_data:
+
+networks:
+  app_network:
+Ưu điểm khi triển khai ứng dụng bằng Docker
+1. Môi trường đồng nhất
+
+Ứng dụng chạy giống nhau trên máy lập trình viên và máy chủ triển khai.
+
+2. Triển khai nhanh
+
+Chỉ cần:
+
+docker compose up -d
+
+Toàn bộ hệ thống sẽ được khởi động.
+
+3. Dễ mở rộng
+
+Có thể chạy nhiều bản sao của ứng dụng:
+
+docker compose up --scale web=5
+4. Cô lập ứng dụng
+
+Mỗi ứng dụng chạy trong một Container riêng biệt, tránh xung đột thư viện và phiên bản.
+
+5. Dễ sao lưu và di chuyển
+
+Chỉ cần sao lưu Docker Image và Docker Volume để chuyển sang máy chủ khác.
+
+6. Tiết kiệm tài nguyên
+
+Container nhẹ hơn máy ảo vì dùng chung Kernel của hệ điều hành.
+
+7. Hỗ trợ CI/CD
+
+Dễ dàng tích hợp với Jenkins, GitLab CI/CD, GitHub Actions và Kubernetes.
+
+Triển khai ứng dụng Docker lên máy chủ không có Internet
+
+Giả sử ứng dụng đã được kiểm tra và chạy thành công trên laptop cá nhân.
+
+Bước 1: Build Docker Image
+docker build -t myapp:v1 .
+
+Kiểm tra Image:
+
+docker images
+Bước 2: Xuất Image ra file
+docker save -o myapp_v1.tar myapp:v1
+
+Nếu dự án sử dụng nhiều Image:
+
+docker save -o project.tar myapp:v1 mysql:8 nginx:latest
+Bước 3: Chuẩn bị các file triển khai
+
+Sao chép các file:
+
+docker-compose.yml
+.env
+project.tar
+Bước 4: Chuyển sang máy chủ
+
+Sử dụng:
+
+USB
+Ổ cứng ngoài
+Mạng LAN nội bộ
+Bước 5: Cài Docker trên máy chủ
+
+Nếu máy chủ không có Internet, cần tải bộ cài Docker từ máy có Internet và chép sang trước.
+
+Kiểm tra:
+
+docker --version
+Bước 6: Nạp Docker Image vào máy chủ
+docker load -i project.tar
+
+Kiểm tra:
+
+docker images
+Bước 7: Khởi động hệ thống
+docker compose up -d
+
+Hoặc:
+
+docker-compose up -d
+Bước 8: Kiểm tra trạng thái
+
+Xem Container đang chạy:
+
+docker ps
+
+Xem log:
+
+docker logs myapp
+
+Kiểm tra dịch vụ:
+
+curl http://localhost
+Quy trình triển khai tổng quát
+Laptop phát triển ứng dụng
+        |
+        v
+Build Docker Image
+        |
+        v
+docker save
+        |
+        v
+File .tar
+        |
+        v
+USB hoặc mạng LAN
+        |
+        v
+Máy chủ không có Internet
+        |
+        v
+docker load
+        |
+        v
+docker compose up -d
+        |
+        v
+Ứng dụng hoạt động
+
+Kết luận: Docker giúp chuẩn hóa môi trường chạy ứng dụng, đơn giản hóa việc triển khai, giảm lỗi do khác biệt cấu hình và cho phép triển khai thuận tiện ngay cả trong các môi trường không có kết nối Internet.
 # B. Thực hành
 - Tạo thư mục
 
