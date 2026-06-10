@@ -187,4 +187,12 @@ EXPORT TOÀN BỘ IMAGE
 
 DỪNG HỆ THỐNG Trong thư mục project: cd ~/bt5-monitor docker compose down Kiểm tra: docker ps
 
+<img width="1625" height="274" alt="image" src="https://github.com/user-attachments/assets/97684caf-47a4-4b11-8510-1067f612c770" />
 
+Load lại từ file nén
+
+<img width="867" height="184" alt="image" src="https://github.com/user-attachments/assets/4d4f858d-75c4-4af0-8090-3719fcc2cc5e" />
+
+- khởi động lại các containers: docker compose -f ~/bt5-monitor/docker-compose.yml up -d
+- - kiểm tra lại -
+<img width="1853" height="453" alt="image" src="https://github.com/user-attachments/assets/6c37e7e5-6ff4-433d-92c3-ee5091163366" />
