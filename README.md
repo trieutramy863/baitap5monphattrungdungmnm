@@ -183,3 +183,4 @@ Vào:
 
 EXPORT TOÀN BỘ IMAGE
 
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/17141bbc-9929-4b78-b2c8-910e24e07633" />
